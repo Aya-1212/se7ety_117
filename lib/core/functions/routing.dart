@@ -6,6 +6,20 @@ pushWithReplacement(context, Widget nextScreen) {
   ));
 }
 
-push(context , Widget nextScreen ){
-  Navigator.of(context).push(MaterialPageRoute(builder: (context) => nextScreen,));
+push(context, Widget nextScreen) {
+  Navigator.of(context).push(MaterialPageRoute(
+    builder: (context) => nextScreen,
+  ));
+}
+
+pushAndRemoveUntil(context, Widget nextScreen) {
+  Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (context) => nextScreen,
+      ),
+      (route) => false);
+}
+
+pop(context){
+  Navigator.of(context).pop(context);
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:se7ety_117/core/constants/assets_icons.dart';
@@ -107,49 +108,67 @@ class HomeView extends StatelessWidget {
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: Stack(
-                        alignment: const Alignment(3.5, -2.2),
+                        alignment:  Alignment.center,
                         //AlignmentGeometry.lerp(, b, 2.75) ,
                         //  const Alignment(BorderSide.strokeAlignOutside,-2.57),
                         //Alignment Geometry,
                         children: [
-                          CircleAvatar(
-                            backgroundColor: AppColors.white.withOpacity(0.35),
-                            radius: 70,
+                          Positioned(
+                            top: -20,
+                            right: -20,
+                            child: CircleAvatar(
+                              backgroundColor: AppColors.white.withOpacity(0.35),
+                              radius: 70,
+                            ),
                           ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              FittedBox(
-                                fit: BoxFit.cover,
-                                child: SvgPicture.asset(
+                          Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  width: 150,
+                                  //alignment: Alignment.center,
                                   AssetsIcons.findDoctor,
                                 ),
-                              ),
-                              (index == 4) ? Text(
-                                'دكتور عظام',
-                                style: getBodyStyle(color: AppColors.white),
-                              ) :  (index == 3) ? Text(
-                                'دكتور قلب',
-                                style: getBodyStyle(color: AppColors.white),
-                              ) : (index == 2) ? Text(
-                                'جراحة عامة',
-                                style: getBodyStyle(color: AppColors.white),
-                              ) : (index == 1) ? Text(
-                                'دكتور مناعة',
-                                style: getBodyStyle(color: AppColors.white),
-                                ) :
-                               Text(
-                                'دكتور جلدية',
-                                style: getBodyStyle(color: AppColors.white),
-                              )   ,
-                            ],
+                                (index == 4)
+                                    ? Text(
+                                        'دكتور عظام',
+                                        style:
+                                            getBodyStyle(color: AppColors.white),
+                                      )
+                                    : (index == 3)
+                                        ? Text(
+                                            'دكتور قلب',
+                                            style: getBodyStyle(
+                                                color: AppColors.white),
+                                          )
+                                        : (index == 2)
+                                            ? Text(
+                                                'جراحة عامة',
+                                                style: getBodyStyle(
+                                                    color: AppColors.white),
+                                              )
+                                            : (index == 1)
+                                                ? Text(
+                                                    'دكتور مناعة',
+                                                    style: getBodyStyle(
+                                                        color: AppColors.white),
+                                                  )
+                                                : Text(
+                                                    'دكتور جلدية',
+                                                    style: getBodyStyle(
+                                                        color: AppColors.white),
+                                                  ),
+                              ],
+                            ),
                           ),
                         ],
                       ));
                 },
               ),
             ),
-           const Gap(20),
+            const Gap(20),
 ///////////////////////////////////////////////////////////////////
             Text(
               'الأعلى تقييماً',
@@ -162,18 +181,18 @@ class HomeView extends StatelessWidget {
               decoration: BoxDecoration(
                   color: AppColors.textFormFieldbg,
                   borderRadius: BorderRadius.circular(15)),
-              child:  Row(
-              //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Row(
+                //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 textDirection: TextDirection.rtl,
                 children: [
                   Container(
                     height: 65,
-                    width:55 ,
+                    width: 55,
                     decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(15))),
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
                     child: Image.asset(AssetsImages.user),
                   ),
-                 const Gap(10),
+                  const Gap(10),
                   Column(
                     children: [
                       Text(
@@ -182,18 +201,22 @@ class HomeView extends StatelessWidget {
                       ),
                       const Gap(3),
                       Text(
-                                              'جراحة عامة',
-                                              style: getSmallStyle(color: AppColors.black),
-                                            ),
+                        'جراحة عامة',
+                        style: getSmallStyle(color: AppColors.black),
+                      ),
                     ],
                   ),
-                 const Spacer(),
+                  const Spacer(),
                   Row(
                     textDirection: TextDirection.rtl,
                     children: [
-                    const  Text('5'),
-                  Icon(Icons.star,color: Colors.yellow.shade700,)],),
-                 
+                      const Text('5'),
+                      Icon(
+                        Icons.star,
+                        color: Colors.yellow.shade700,
+                      )
+                    ],
+                  ),
                 ],
               ),
             )

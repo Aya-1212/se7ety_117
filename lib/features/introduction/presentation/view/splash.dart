@@ -3,10 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:se7ety_117/core/constants/assets_images.dart';
 import 'package:se7ety_117/core/functions/routing.dart';
-import 'package:se7ety_117/core/services/app_local.dart';
 import 'package:se7ety_117/core/utils/app_colors.dart';
-import 'package:se7ety_117/features/signin_doctor/presentation/view/signin_doctor.dart';
-import 'package:se7ety_117/features/signin_patient/presentation/view/sign_in_patient.dart';
+import 'package:se7ety_117/features/introduction/presentation/view/onboarding/onboarding_view.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -19,13 +17,14 @@ class _SplashViewState extends State<SplashView> {
   // ignore: must_call_super
   void initState() {
     Future.delayed(
-      Duration(seconds: 10),
+      Duration(seconds: 8),
       () {
         pushWithReplacement(
             context,
-            (AppLocalStorage.getUserData('isDoctor'))
-                ? SignInDoctorVeiw()
-                : SignInPatientVeiw() );
+            // (AppLocalStorage.getUserData('isDoctor'))
+            //     ? SignInDoctorVeiw()
+                // :
+                OnboardingView());
       },
     );
   }

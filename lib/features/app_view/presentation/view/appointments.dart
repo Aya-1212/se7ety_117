@@ -6,6 +6,6 @@ class AppointmentsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child:  Text('Appointmentsview')) ;
+    return const Center(child: Text('Appointmentsview'));
   }
 }

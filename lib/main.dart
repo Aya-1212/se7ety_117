@@ -2,13 +2,14 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/adapters.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:se7ety_117/core/theme/app_theme.dart';
-import 'package:se7ety_117/core/services/app_local.dart';
-import 'package:se7ety_117/features/welcome/presentation/view/welcome.dart';
+import 'package:se7ety_117/features/authorization/presentation/manager/auth_cubit.dart';
+import 'package:se7ety_117/features/introduction/presentation/view/splash.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
   Firebase.initializeApp(
       options: const FirebaseOptions(
           apiKey: 'AIzaSyDYn8kyokOM2hRUB6UNV9f9LE08zOKBiFY',
@@ -16,10 +17,7 @@ void main() async {
           messagingSenderId: '37287869174',
           projectId: 'se7ety-117-8ceaa'));
   //////////////////////////////////////////////////////
-  await Hive.initFlutter();
-  await Hive.openBox('user');
-  AppLocalStorage.init();
-  //////////////////////////////////////////////////////
+  
   runApp(MainApp());
 }
 
@@ -28,14 +26,20 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
+    return BlocProvider(
+      create: (context) => AuthCubit(),
       child: MaterialApp(
-        themeMode: ThemeMode.light ,
+        themeMode: ThemeMode.light,
         theme: Apptheme.lightTheme,
-        home: WelcomeView(),
+        home: SplashView(),
         debugShowCheckedModeBanner: false,
+        builder: (context, child) {
+          return Directionality(
+            textDirection: TextDirection.rtl,
+            child: child!,
+          );
+        },
       ),
-      textDirection: TextDirection.rtl,
     );
   }
 }

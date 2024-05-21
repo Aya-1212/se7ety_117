@@ -11,32 +11,26 @@ class Apptheme {
       appBarTheme: AppBarTheme(
           backgroundColor: AppColors.primary, foregroundColor: AppColors.white),
       inputDecorationTheme: InputDecorationTheme(
-         fillColor: AppColors.textFormFieldbg ,
-         filled: true ,
+          fillColor: AppColors.textFormFieldbg,
+          filled: true,
           prefixIconColor: AppColors.primary,
           suffixIconColor: AppColors.primary,
           contentPadding:
-              const EdgeInsets.only(bottom: 10,top: 10,right: 10,left: 18),
+              const EdgeInsets.only(bottom: 10, top: 10, right: 10, left: 18),
           constraints: const BoxConstraints(minHeight: 70),
           hintStyle: getSmallStyle(color: AppColors.grey),
-
           enabledBorder: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(20)),
-              borderSide:  BorderSide(
-                 style: BorderStyle.none)),
-
-          focusedBorder:const OutlineInputBorder(
+              borderSide: BorderSide(style: BorderStyle.none)),
+          focusedBorder: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(20)),
-              borderSide:  BorderSide(
-                   style: BorderStyle.none)),
-
+              borderSide: BorderSide(style: BorderStyle.none)),
           errorBorder: const OutlineInputBorder(
-              borderRadius:BorderRadius.all(Radius.circular(20)),
-              borderSide: BorderSide(
-                 style: BorderStyle.none)),
-
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+              borderSide: BorderSide(style: BorderStyle.none)),
           focusedErrorBorder: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(20)),
-              borderSide:  BorderSide(
-               style: BorderStyle.none,))));
+              borderSide: BorderSide(
+                style: BorderStyle.none,
+              ))));
 }
