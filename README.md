@@ -12,7 +12,7 @@ This Flutter-based mobile application aims to facilitate efficient doctor appoin
  #### Doctor Interface
 - User Authentication: Secure doctor registration and login using Firebase Authentication.
 - Patient Management: View and manage patient information and appointment history.
-Appointment Scheduling: Set availability and view booked appointments.
+- Appointment Scheduling: Set availability and view booked appointments.
 
  ### Firebase Integration
 - Firebase Authentication: Manage user authentication and authorization for both patients and doctors.
