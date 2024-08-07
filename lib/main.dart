@@ -3,13 +3,14 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:se7ety_117/core/services/app_local_storage.dart';
 import 'package:se7ety_117/core/theme/app_theme.dart';
 import 'package:se7ety_117/features/authorization/presentation/manager/auth_cubit.dart';
 import 'package:se7ety_117/features/introduction/presentation/view/splash.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+  AppLocalStorage.init();
   Firebase.initializeApp(
       options: const FirebaseOptions(
           apiKey: 'AIzaSyDYn8kyokOM2hRUB6UNV9f9LE08zOKBiFY',

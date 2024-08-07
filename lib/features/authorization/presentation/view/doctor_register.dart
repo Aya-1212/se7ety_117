@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,6 +18,7 @@ import 'package:se7ety_117/core/widgets/custorm_dialogs.dart';
 import 'package:se7ety_117/features/authorization/data/specialization_list.dart';
 import 'package:se7ety_117/features/authorization/presentation/manager/auth_cubit.dart';
 import 'package:se7ety_117/features/authorization/presentation/manager/auth_states.dart';
+import 'package:se7ety_117/features/doctor/doctor_app_view.dart';
 
 class DoctorRegister extends StatefulWidget {
   const DoctorRegister({super.key});
@@ -29,16 +32,15 @@ class _DoctorRegisterState extends State<DoctorRegister> {
   var formKey = GlobalKey<FormState>();
   var bio = TextEditingController();
   var address = TextEditingController();
-  var openHour = TextEditingController();
-  var closeHour = TextEditingController();
   var phone1 = TextEditingController();
   var phone2 = TextEditingController();
   String? userID;
   String? pickedGalleryImage;
   File? file;
   String? imageUrl;
- late String endTime = DateFormat('hh').format(DateTime.now());
- late String openTime = DateFormat('hh').format(DateTime.now().add( const Duration(hours: 1)));
+  late String endTime =
+      DateFormat('hh').format(DateTime.now().add(const Duration(hours: 1)));
+  late String openTime = DateFormat('hh').format(DateTime.now());
 
   Future<void> _getUserID() async {
     userID = FirebaseAuth.instance.currentUser!.uid;
@@ -64,41 +66,48 @@ class _DoctorRegisterState extends State<DoctorRegister> {
   }
 
   Future<String> storeAndUploadDoctorImage(File image) async {
-    //instance storage . ref() 
-    // name folder /
-    //name file
-    Reference ref = 
-    FirebaseStorage.instanceFor(bucket: 'gs://se7ety-117-8ceaa.appspot.com')
-        .ref()
-        .child('doctors/$userID');
-  // file  ---> link for image
-  // type file
-   SettableMetadata metadata = SettableMetadata(contentType: 'image/jpeg');
-//file, image
-   ref.putFile(file!,metadata);
-   //file ---->link
-   String url = await ref.getDownloadURL();
-   return url;
+    Reference ref =
+        FirebaseStorage.instanceFor(bucket: 'gs://se7ety-117-8ceaa.appspot.com')
+            .ref()
+            .child('doctors/$userID');
+
+    SettableMetadata metadata = SettableMetadata(contentType: 'image/jpeg');
+    await ref.putFile(file!, metadata);
+    String url = await ref.getDownloadURL();
+    return url;
   }
-  showEndHourTimePicker() async{
-    final pickedTime =  await showTimePicker(context: context, initialTime: TimeOfDay.now());
-    if( pickedTime != null){
+
+  showOpenHourTimePicker() async {
+    final datePicked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (datePicked != null) {
       setState(() {
-      endTime =  pickedTime.hour.toString();
+        openTime = datePicked.hour.toString();
       });
     }
   }
 
-    showOpenHourTimePicker() async{
-    final pickedTime =  await showTimePicker(context: context, initialTime: TimeOfDay.now());
-    if( pickedTime != null){
+  showEndHourTimePicker() async {
+    final timePicker = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(
+          DateTime.now().add(const Duration(minutes: 15))),
+    );
+
+    if (timePicker != null) {
       setState(() {
-      openTime =  pickedTime.hour.toString();
+        endTime = timePicker.hour.toString();
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
+    print(imageUrl);
+
     return Scaffold(
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(40),
@@ -109,7 +118,11 @@ class _DoctorRegisterState extends State<DoctorRegister> {
       body: BlocListener<AuthCubit, AuthStates>(
         listener: (context, state) {
           if (state is UpdateDoctorSuccessState) {
-            // navigate to page
+            // navigate to doctor page
+            pushAndRemoveUntil(
+              context,
+              const DoctorAppView(),
+            );
           } else if (state is UpdateDoctorErrorState) {
             pop(context);
             showErrorDialog(context, errorMessage: state.error);
@@ -130,7 +143,7 @@ class _DoctorRegisterState extends State<DoctorRegister> {
                       child: Stack(
                         children: [
                           CircleAvatar(
-                            backgroundImage: (pickedGalleryImage != null)
+                            backgroundImage: pickedGalleryImage != null
                                 ? FileImage(File(pickedGalleryImage!))
                                     as ImageProvider
                                 : AssetImage(AssetsImages.user),
@@ -140,17 +153,17 @@ class _DoctorRegisterState extends State<DoctorRegister> {
                             bottom: 0.25,
                             right: 0.5,
                             child: GestureDetector(
-                              onTap: () async{
-                              await  uploadImage();
-                              },
+                                onTap: () async {
+                                  await uploadImage();
+                                },
                                 child: const CircleAvatar(
-                              radius: 18,
-                              backgroundColor: AppColors.white,
-                              child: Icon(
-                                Icons.camera_alt,
-                                color: AppColors.primary,
-                              ),
-                            )),
+                                  radius: 18,
+                                  backgroundColor: AppColors.white,
+                                  child: Icon(
+                                    Icons.camera_alt,
+                                    color: AppColors.primary,
+                                  ),
+                                )),
                           )
                         ],
                       ),
@@ -159,7 +172,7 @@ class _DoctorRegisterState extends State<DoctorRegister> {
                       'التخصص',
                       style:
                           getSmallStyle(color: AppColors.black, fontSize: 15),
-               //       textDirection: TextDirection.rtl,
+                      //       textDirection: TextDirection.rtl,
                     ),
                     const Gap(5),
                     Container(
@@ -190,7 +203,7 @@ class _DoctorRegisterState extends State<DoctorRegister> {
                       'نبذة تعريفية',
                       style:
                           getSmallStyle(color: AppColors.black, fontSize: 15),
-               //       textDirection: TextDirection.rtl,
+                      //       textDirection: TextDirection.rtl,
                     ),
                     ////////////////////////////////////
                     const Gap(5),
@@ -205,7 +218,7 @@ class _DoctorRegisterState extends State<DoctorRegister> {
                       },
                       maxLines: 4,
                       decoration: InputDecoration(
-                 //       hintTextDirection: TextDirection.rtl,
+                        //       hintTextDirection: TextDirection.rtl,
                         hintText:
                             'سجل المعلومات الطبية العامة مثل تعليمك الأكاديمي و خبراتك السابقة...',
                         hintStyle:
@@ -221,7 +234,7 @@ class _DoctorRegisterState extends State<DoctorRegister> {
                       'عنوان العيادة',
                       style:
                           getSmallStyle(color: AppColors.black, fontSize: 15),
-                  //    textDirection: TextDirection.rtl,
+                      //    textDirection: TextDirection.rtl,
                     ),
                     const Gap(5),
                     TextFormField(
@@ -235,7 +248,7 @@ class _DoctorRegisterState extends State<DoctorRegister> {
                       },
                       decoration: InputDecoration(
                         hintText: '5 شارع مصدق - الدقي - الجيزة',
-                     //   hintTextDirection: TextDirection.rtl,
+                        //   hintTextDirection: TextDirection.rtl,
                         hintStyle:
                             getSmallStyle(color: AppColors.grey, fontSize: 15),
                       ),
@@ -255,19 +268,19 @@ class _DoctorRegisterState extends State<DoctorRegister> {
                               const Gap(5),
                               TextField(
                                 textInputAction: TextInputAction.next,
-                                controller: openHour,
                                 decoration: InputDecoration(
                                   prefixIcon: const Icon(
                                     Icons.access_time_rounded,
                                     color: AppColors.primary,
                                   ),
                                   hintText: openTime,
-                     //             hintTextDirection: TextDirection.rtl,
+                                  //             hintTextDirection: TextDirection.rtl,
                                   hintStyle: getSmallStyle(
                                       color: AppColors.grey, fontSize: 15),
-                                ),readOnly: true,
+                                ),
+                                readOnly: true,
                                 onTap: () async {
-                               await   showOpenHourTimePicker();
+                                  await showOpenHourTimePicker();
                                 },
                               ),
                             ],
@@ -286,20 +299,19 @@ class _DoctorRegisterState extends State<DoctorRegister> {
                               const Gap(5),
                               TextField(
                                 textInputAction: TextInputAction.next,
-                                controller: closeHour,
-                               
                                 decoration: InputDecoration(
                                   prefixIcon: const Icon(
                                     Icons.access_time_rounded,
                                     color: AppColors.primary,
                                   ),
                                   hintText: endTime,
-                       //           hintTextDirection: TextDirection.rtl,
+                                  //           hintTextDirection: TextDirection.rtl,
                                   hintStyle: getSmallStyle(
                                       color: AppColors.grey, fontSize: 15),
-                                ),readOnly: true,
-                                onTap: () async{
-                                  await  showEndHourTimePicker();
+                                ),
+                                readOnly: true,
+                                onTap: () async {
+                                  await showEndHourTimePicker();
                                 },
                               ),
                             ],
@@ -311,7 +323,7 @@ class _DoctorRegisterState extends State<DoctorRegister> {
                       'رقم الهاتف 1',
                       style:
                           getSmallStyle(color: AppColors.black, fontSize: 15),
-                //      textDirection: TextDirection.rtl,
+                      //      textDirection: TextDirection.rtl,
                     ),
                     const Gap(5),
                     TextFormField(
@@ -320,12 +332,14 @@ class _DoctorRegisterState extends State<DoctorRegister> {
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'هذا الحقل مطلوب';
+                        } else if (value.length != 11) {
+                          return 'الرقم غير صحيح';
                         }
                         return null;
                       },
                       decoration: InputDecoration(
                         hintText: '+20xxxxxxxxxxx',
-                   //     hintTextDirection: TextDirection.rtl,
+                        //     hintTextDirection: TextDirection.rtl,
                         hintStyle:
                             getSmallStyle(color: AppColors.grey, fontSize: 15),
                       ),
@@ -334,7 +348,7 @@ class _DoctorRegisterState extends State<DoctorRegister> {
                       'رقم الهاتف 2 (اختياري)',
                       style:
                           getSmallStyle(color: AppColors.black, fontSize: 15),
-                //      textDirection: TextDirection.rtl,
+                      //      textDirection: TextDirection.rtl,
                     ),
                     const Gap(5),
                     TextField(
@@ -342,7 +356,7 @@ class _DoctorRegisterState extends State<DoctorRegister> {
                       controller: phone2,
                       decoration: InputDecoration(
                         hintText: '+20xxxxxxxxxxx',
-                   //     hintTextDirection: TextDirection.rtl,
+                        //     hintTextDirection: TextDirection.rtl,
                         hintStyle:
                             getSmallStyle(color: AppColors.grey, fontSize: 15),
                       ),
@@ -351,17 +365,17 @@ class _DoctorRegisterState extends State<DoctorRegister> {
                         child: CustomElevatedButton(
                       onPressed: () {
                         if (formKey.currentState!.validate()) {
-                            context.read<AuthCubit>().updateDoctorProfile(
-                              uid: FirebaseAuth.instance.currentUser!.uid,
-                             address: address.text,
-                              bio: bio.text,
-                               closeHour: endTime,
+                          context.read<AuthCubit>().updateDoctorProfile(
+                                uid: FirebaseAuth.instance.currentUser!.uid,
+                                address: address.text,
+                                bio: bio.text,
+                                closeHour: endTime,
                                 openHour: openTime,
-                                 phone1: phone1.text, 
-                                 image: imageUrl ?? '', 
-                                 specialization: specialization,
-                                 phone2: phone2.text ?? '',
-                                 );
+                                phone1: phone1.text,
+                                image: imageUrl ?? "",
+                                specialization: specialization,
+                                phone2: phone2.text,
+                              );
                         }
                       },
                       text: 'التسجيل',
@@ -372,7 +386,6 @@ class _DoctorRegisterState extends State<DoctorRegister> {
               ),
             )),
       ),
-      //bottomNavigationBar: ,
     );
   }
 }

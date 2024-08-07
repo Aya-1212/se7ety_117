@@ -4,9 +4,10 @@ import 'package:gap/gap.dart';
 import 'package:se7ety_117/core/constants/assets_images.dart';
 import 'package:se7ety_117/core/functions/email_validate.dart';
 import 'package:se7ety_117/core/functions/routing.dart';
+import 'package:se7ety_117/core/services/app_local_storage.dart';
 import 'package:se7ety_117/core/utils/app_colors.dart';
 import 'package:se7ety_117/core/utils/text_style.dart';
-import 'package:se7ety_117/core/widgets/app_view.dart';
+import 'package:se7ety_117/features/patient/patient_app_view.dart';
 import 'package:se7ety_117/core/widgets/custorm_dialogs.dart';
 import 'package:se7ety_117/features/authorization/presentation/manager/auth_cubit.dart';
 import 'package:se7ety_117/features/authorization/presentation/manager/auth_states.dart';
@@ -14,16 +15,23 @@ import 'package:se7ety_117/features/authorization/presentation/view/doctor_regis
 import 'package:se7ety_117/features/authorization/presentation/view/sign_in.dart';
 
 class RegisterView extends StatefulWidget {
-  final int index;
-  const RegisterView({super.key, required this.index, });
+  const RegisterView({
+    super.key,
+  });
 
   @override
   State<RegisterView> createState() => _RegisterViewState();
 }
 
 class _RegisterViewState extends State<RegisterView> {
+   
   String handleUserType() {
-    return widget.index==0? 'دكتور' : 'مريض';
+    return AppLocalStorage.getData("isDoctor") ? 'دكتور' : 'مريض';
+  }
+  @override
+  void initState() {
+    handleUserType();
+    super.initState();
   }
 
   var name = TextEditingController();
@@ -37,15 +45,13 @@ class _RegisterViewState extends State<RegisterView> {
     return BlocListener<AuthCubit, AuthStates>(
       listener: (context, state) {
         if (state is RegisterSuccessState) {
-          if(widget.index==0){
+          if (AppLocalStorage.getData("isDoctor")) {
             //doctor
-           pushAndRemoveUntil(context, const DoctorRegister());
-          }
-          else{
+            pushAndRemoveUntil(context, const DoctorRegister());
+          } else {
             //patient
-             pushAndRemoveUntil(context, const PatenitAppView());
+            pushAndRemoveUntil(context, const PatenitAppView());
           }
-          
         } else if (state is RegisterErrorState) {
           pop(context);
           showErrorDialog(context, errorMessage: state.error);
@@ -77,9 +83,7 @@ class _RegisterViewState extends State<RegisterView> {
                   TextFormField(
                     textInputAction: TextInputAction.next,
                     controller: name,
-                    //style: const TextStyle(color:  AppColors.textFormFieldbg),
                     decoration: InputDecoration(
-                        // hintTextDirection: TextDirection.rtl,
                         hintText: 'الاسم',
                         hintStyle: getSmallStyle(
                           color: AppColors.grey,
@@ -152,18 +156,20 @@ class _RegisterViewState extends State<RegisterView> {
                         backgroundColor: AppColors.primary),
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
-                        if (widget.index == 0) {
+                        if (AppLocalStorage.getData("isDoctor")) {
                           //doctor
                           context.read<AuthCubit>().registerAsDoctor(
-                              userEmail: email.text,
-                              userPassword: password.text,
-                              userName: name.text);
+                                userEmail: email.text,
+                                userPassword: password.text,
+                                userName: name.text,
+                              );
                         } else {
                           //patient
                           context.read<AuthCubit>().registerAsPatient(
-                              userEmail: email.text,
-                              userPassword: password.text,
-                              userName: name.text);
+                                userEmail: email.text,
+                                userPassword: password.text,
+                                userName: name.text,
+                              );
                         }
                         //
                       }
@@ -187,8 +193,7 @@ class _RegisterViewState extends State<RegisterView> {
                           onPressed: () {
                             pushWithReplacement(
                                 context,
-                                SignInVeiw(
-                                  index: widget.index,
+                              const  SignInVeiw(
                                 ));
                           },
                           child: Text(

@@ -19,7 +19,7 @@ class AuthCubit extends Cubit<AuthStates> {
       User user = credential.user!;
       user.updateDisplayName(userName);
       //FirebaseAuth.instance.currentUser!.updateDisplayName(userName);
-       FirebaseFirestore.instance.collection('doctors').doc(user.uid).set({
+      FirebaseFirestore.instance.collection('doctors').doc(user.uid).set({
         'name': userName,
         'email': user.email,
         'uid': user.uid,
@@ -31,12 +31,9 @@ class AuthCubit extends Cubit<AuthStates> {
         'address': '',
         'image': '',
         'specialization': '',
-        'rating': 3,
+        'rating': '3',
       }, SetOptions(merge: true));
       emit(RegisterSuccessState());
-    
-    
-    
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         emit(RegisterErrorState(error: 'كلمة المرور ضعيفة جدًا'));
@@ -61,14 +58,12 @@ class AuthCubit extends Cubit<AuthStates> {
           .createUserWithEmailAndPassword(
               email: userEmail, password: userPassword);
       User user = credential.user!;
+
       user.updateDisplayName(userName);
-      //FirebaseAuth.instance.currentUser!.updateDisplayName(userName);
-       FirebaseFirestore.instance
-          .collection('patients')
-          .doc(user.uid)
-          .set({
-        'name': user.displayName,
-        'email': user.email,
+
+      FirebaseFirestore.instance.collection('patients').doc(user.uid).set({
+        'name': userName,
+        'email': userEmail,
         'uid': user.uid,
         'phone': '',
         'bio': '',
@@ -90,56 +85,54 @@ class AuthCubit extends Cubit<AuthStates> {
     }
   }
 
-  login(
-      {required String userEmail,
-      required String userPassword,}) async {
-      emit(LoginLoadingState());
-      try {
-         await FirebaseAuth.instance
-        .signInWithEmailAndPassword(email: userEmail, password: userPassword);
-
-        emit(LoginSuccessState());
-      } on FirebaseAuthException catch (e) {
-        if ( e.code == 'user-not-found')
-        {
-            emit(LoginErrorState(error: 'البريد الالكتروني غير موجود'));
-        } else if ( e.code == 'wrong-password'){
-            emit(LoginErrorState(error: 'كلمة المرور خاطئة'));
-          } else{
-            emit(LoginErrorState(error: 'حدثت مشكلة في التسجيل'));
-          }
-      } catch (e) {
-        emit(LoginErrorState(error: 'حدثت مشكلة في الانترنت'));
-              }
+  login({
+    required String userEmail,
+    required String userPassword,
+  }) async {
+    emit(LoginLoadingState());
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: userEmail, password: userPassword);
+      emit(LoginSuccessState());
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        emit(LoginErrorState(error: 'البريد الالكتروني غير موجود'));
+      } else if (e.code == 'wrong-password') {
+        emit(LoginErrorState(error: 'كلمة المرور خاطئة'));
+      } else {
+        emit(LoginErrorState(error: 'حدثت مشكلة في التسجيل'));
+      }
+    } catch (e) {
+      emit(LoginErrorState(error: 'حدثت مشكلة في الانترنت'));
+    }
   }
 
-  updateDoctorProfile(
-  { required String uid ,
-   required String address ,
-  required String bio ,
-  required String closeHour ,
-  required String openHour ,
-  required String phone1,
-   String? phone2 ,
-   required String image,
-   required String specialization,}){
+  updateDoctorProfile({
+    required String uid,
+    required String address,
+    required String bio,
+    required String closeHour,
+    required String openHour,
+    required String phone1,
+    String? phone2,
+    required String image,
+    required String specialization,
+  }) {
     emit(UpdateDoctorLoadingState());
-   try{
- FirebaseFirestore.instance.collection('doctors').doc(uid).set({
-      'address' : address,
-      'bio': bio ,
-      'closeHour': closeHour,
-      'image': image,
-      'openHour': openHour ,
-      'phone1': phone1 ,
-      'phone2': phone2  ,
-      'specialization' : specialization ,
-    },SetOptions(merge: true));
-   emit(UpdateDoctorSuccessState());
-   } catch (e){
-     emit(UpdateDoctorErrorState(error: 'حدثت مشكلة في التعديل'));
-   }
+    try {
+      FirebaseFirestore.instance.collection('doctors').doc(uid).set({
+        'address': address,
+        'bio': bio,
+        'closeHour': closeHour,
+        'image': image,
+        'openHour': openHour,
+        'phone1': phone1,
+        'phone2': phone2 ?? "",
+        'specialization': specialization,
+      }, SetOptions(merge: true));
+      emit(UpdateDoctorSuccessState());
+    } catch (e) {
+      emit(UpdateDoctorErrorState(error: 'حدثت مشكلة في التعديل'));
+    }
   }
-
-  
 }

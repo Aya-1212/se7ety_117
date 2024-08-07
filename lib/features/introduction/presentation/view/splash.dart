@@ -1,10 +1,14 @@
 // ignore_for_file: annotate_overrides, prefer_const_constructors
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:se7ety_117/core/constants/assets_images.dart';
 import 'package:se7ety_117/core/functions/routing.dart';
+import 'package:se7ety_117/core/services/app_local_storage.dart';
 import 'package:se7ety_117/core/utils/app_colors.dart';
+import 'package:se7ety_117/features/doctor/doctor_app_view.dart';
 import 'package:se7ety_117/features/introduction/presentation/view/onboarding/onboarding_view.dart';
+import 'package:se7ety_117/features/patient/patient_app_view.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -21,10 +25,13 @@ class _SplashViewState extends State<SplashView> {
       () {
         pushWithReplacement(
             context,
-            // (AppLocalStorage.getUserData('isDoctor'))
-            //     ? SignInDoctorVeiw()
-                // :
-                OnboardingView());
+            FirebaseAuth.instance.currentUser != null &&
+                    AppLocalStorage.getData("isDoctor") == false
+                ? PatenitAppView()
+                : FirebaseAuth.instance.currentUser != null &&
+                        AppLocalStorage.getData("isDoctor") == true
+                    ? DoctorAppView()
+                    : OnboardingView());
       },
     );
   }

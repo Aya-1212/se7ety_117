@@ -1,24 +1,26 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppLocalStorage {
-//static late  SharedPreferences user ;
-  // init() async{
-  //  user = await SharedPreferences.getInstance();
-  // }
- static cacheUserData (key, dynamic value) async{
-  final user = await SharedPreferences.getInstance();
-  if(value is int){
-    user.setInt(key,value);
-  } else if(value is double){
-     user.setDouble(key, value);
-  }else if(value is bool){
-      user.setBool(key, value);
-  }else{
-       user.setString(key, value);
+  static SharedPreferences? pref;
+
+  static init() async {
+    pref = await SharedPreferences.getInstance();
   }
- }
- static Future<dynamic> getUserData (key) async{
-  final user = await SharedPreferences.getInstance();
-  return user.get(key);
- }
+
+  static Future<void> cacheData(key, value)async {
+    if (value is int) {
+      pref!.setInt(key, value);
+    } else if (value is double) {
+      pref!.setDouble(key, value);
+    } else if (value is bool) {
+      pref!.setBool(key, value);
+    } else  {
+     await pref!.setString(key, value);
+    } 
+  }
+
+
+  static dynamic getData(key) {
+   return pref!.get(key);
+  }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:se7ety_117/core/constants/assets_images.dart';
 import 'package:se7ety_117/core/functions/routing.dart';
+import 'package:se7ety_117/core/services/app_local_storage.dart';
 import 'package:se7ety_117/core/utils/app_colors.dart';
 import 'package:se7ety_117/core/utils/text_style.dart';
 import 'package:se7ety_117/core/widgets/custom_elevated.dart';
@@ -65,9 +66,10 @@ class WelcomeView extends StatelessWidget {
               Gap(20),
               CustomElevatedButton(
                 onPressed: () {
+                  AppLocalStorage.cacheData("isDoctor",true);
                   // 0 doctor
                  // AppLocalStorage.cacheUserData('isDoctor',true);
-                  push(context, SignInVeiw(index: 0,));
+                  push(context, const SignInVeiw());
                 },
                 height: 60,
                 text: 'دكتور',
@@ -79,9 +81,10 @@ class WelcomeView extends StatelessWidget {
       /////////////////////////////////////////////////////////        
               CustomElevatedButton(
                 onPressed: () {
+                   AppLocalStorage.cacheData("isDoctor",false);
                   // 1 patient
                   //AppLocalStorage.cacheUserData('isDoctor',false);
-                  push(context, SignInVeiw(index: 1,));         
+                  push(context,const SignInVeiw());         
                 },
                 height: 60,
                 text: 'مريض',

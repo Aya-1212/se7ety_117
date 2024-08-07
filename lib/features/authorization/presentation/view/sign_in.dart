@@ -4,27 +4,33 @@ import 'package:gap/gap.dart';
 import 'package:se7ety_117/core/constants/assets_images.dart';
 import 'package:se7ety_117/core/functions/email_validate.dart';
 import 'package:se7ety_117/core/functions/routing.dart';
+import 'package:se7ety_117/core/services/app_local_storage.dart';
 import 'package:se7ety_117/core/utils/app_colors.dart';
 import 'package:se7ety_117/core/utils/text_style.dart';
-import 'package:se7ety_117/core/widgets/app_view.dart';
+import 'package:se7ety_117/features/doctor/doctor_app_view.dart';
+import 'package:se7ety_117/features/patient/patient_app_view.dart';
 import 'package:se7ety_117/core/widgets/custorm_dialogs.dart';
 import 'package:se7ety_117/features/authorization/presentation/manager/auth_cubit.dart';
 import 'package:se7ety_117/features/authorization/presentation/manager/auth_states.dart';
 import 'package:se7ety_117/features/authorization/presentation/view/new_account.dart';
 
 class SignInVeiw extends StatefulWidget {
-  final int index ;
-  const SignInVeiw({super.key, required this.index,});
+  const SignInVeiw({super.key,});
 
   @override
   State<SignInVeiw> createState() => _SignInVeiwState();
 }
 
 class _SignInVeiwState extends State<SignInVeiw> {
+  
   String handleUserType() {
-    return widget.index== 0? 'دكتور' : 'مريض';
+    return AppLocalStorage.getData("isDoctor")? 'دكتور' : 'مريض';
   }
-
+  @override
+  void initState() {
+    handleUserType();
+    super.initState();
+  }
   var password = TextEditingController();
   var email = TextEditingController();
 
@@ -36,11 +42,14 @@ class _SignInVeiwState extends State<SignInVeiw> {
     return BlocListener<AuthCubit, AuthStates>(
       listener: (context, state) {
         if (state is LoginSuccessState) {
-          if (widget.index== 0) {
+          if (AppLocalStorage.getData("isDoctor")) {
             //doctor //navigate to doctor app
+              pushAndRemoveUntil(
+              context,
+              const DoctorAppView(),
+            );
           } else {
             //patient
-            
             pushAndRemoveUntil(context, const PatenitAppView());
           }
         } else if (state is LoginErrorState) {
@@ -136,13 +145,7 @@ class _SignInVeiwState extends State<SignInVeiw> {
                           context.read<AuthCubit>().login(
                               userEmail: email.text,
                               userPassword: password.text);
-                          if (widget.index== 0) {
-                            //doctor
-                             // register as doctor
-                        } else {
-                          //patient
-                          // push(context, const PatenitAppView());
-                        }
+                        
                       }
                       
                     },
@@ -165,11 +168,10 @@ class _SignInVeiwState extends State<SignInVeiw> {
                       ),
                       TextButton(
                           onPressed: () {
+                            // print(AppLocalStorage.getData("isDoctor"));
                             pushWithReplacement(
                                 context,
-                                RegisterView(
-                                  index: widget.index,
-                                ));
+                               const RegisterView());
                           },
                           child: Text(
                             'سجل الان',
