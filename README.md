@@ -18,4 +18,43 @@ This Flutter-based mobile application aims to facilitate efficient doctor appoin
 - Firebase Authentication: Manage user authentication and authorization for both patients and doctors.
 - Firebase Firestore: Store user profiles, appointment details, medical records, and other relevant data.
 - Firebase Storage: Store patient and doctor images securely.
+
+# OverView
   
+###   Authentication
+
+<div>
+  <image src="https://github.com/Aya-1212/se7ety_117/blob/main/sa7aty_screenshots/Screenshot_1723050794.png" height = 500>
+  <image src="https://github.com/Aya-1212/se7ety_117/blob/main/sa7aty_screenshots/Screenshot_1723051135.png" height = 500>
+  <image src="https://github.com/Aya-1212/se7ety_117/blob/main/sa7aty_screenshots/Screenshot_1723051142.png" height = 500>
+  <image src="https://github.com/Aya-1212/se7ety_117/blob/main/sa7aty_screenshots/Screenshot_1723051341.png" height = 500>
+    <image src="https://github.com/Aya-1212/se7ety_117/blob/main/sa7aty_screenshots/Screenshot_1723051348.png" height = 500>
+  <image src="https://github.com/Aya-1212/se7ety_117/blob/main/sa7aty_screenshots/Screenshot_1723051419.png" height = 500>
+    <image src="https://github.com/Aya-1212/se7ety_117/blob/main/sa7aty_screenshots/Screenshot_1723051797.png" height = 500>
+ <div>
+
+ ###   Patient
+
+<div>
+  <image src="https://github.com/Aya-1212/se7ety_117/blob/main/sa7aty_screenshots/Screenshot_1723052039.png" height = 500>
+  <image src="https://github.com/Aya-1212/se7ety_117/blob/main/sa7aty_screenshots/Screenshot_1723052043.png" height = 500>
+  <image src="https://github.com/Aya-1212/se7ety_117/blob/main/sa7aty_screenshots/Screenshot_1723052057.png" height = 500>
+  <image src="https://github.com/Aya-1212/se7ety_117/blob/main/sa7aty_screenshots/Screenshot_1723052328.png" height = 500>
+    <image src="https://github.com/Aya-1212/se7ety_117/blob/main/sa7aty_screenshots/Screenshot_1723052335.png" height = 500>
+  <image src="https://github.com/Aya-1212/se7ety_117/blob/main/sa7aty_screenshots/Screenshot_1723054135.png" height = 500>
+    <image src="https://github.com/Aya-1212/se7ety_117/blob/main/sa7aty_screenshots/Screenshot_1723054139.png" height = 500>
+     <image src="https://github.com/Aya-1212/se7ety_117/blob/main/sa7aty_screenshots/Screenshot_1723054143.png" height = 500>
+<div>
+
+ ###   Doctor
+
+<div>
+  <image src="https://github.com/Aya-1212/se7ety_117/blob/main/sa7aty_screenshots/Screenshot_1723054564.png" height = 500>
+  <image src="https://github.com/Aya-1212/se7ety_117/blob/main/sa7aty_screenshots/Screenshot_1723054573.png" height = 500>
+  <image src="https://github.com/Aya-1212/se7ety_117/blob/main/sa7aty_screenshots/Screenshot_1723054578.png" height = 500>
+  <image src="https://github.com/Aya-1212/se7ety_117/blob/main/sa7aty_screenshots/Screenshot_1723054580.png" height = 500>
+    <image src="https://github.com/Aya-1212/se7ety_117/blob/main/sa7aty_screenshots/Screenshot_1723052335.png" height = 500>
+  <image src="https://github.com/Aya-1212/se7ety_117/blob/main/sa7aty_screenshots/Screenshot_1723054582.png" height = 500>
+<div>
+
+
