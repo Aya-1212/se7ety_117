@@ -1,13 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
-import 'package:intl/intl.dart';
 import 'package:se7ety_117/core/functions/routing.dart';
+import 'package:se7ety_117/core/services/time_services.dart';
 import 'package:se7ety_117/core/utils/app_colors.dart';
 import 'package:se7ety_117/core/utils/text_style.dart';
 import 'package:se7ety_117/core/widgets/custom_elevated.dart';
 import 'package:se7ety_117/core/widgets/empty_pending_appoinments.dart';
+import 'package:se7ety_117/core/services/appoinment_services.dart';
 
 class PendingDoctorScheduleList extends StatefulWidget {
   const PendingDoctorScheduleList({super.key});
@@ -19,13 +21,17 @@ class PendingDoctorScheduleList extends StatefulWidget {
 
 class _PendingDoctorScheduleListState extends State<PendingDoctorScheduleList> {
   User? user;
+  late String appId;
   @override
   void initState() {
     user = FirebaseAuth.instance.currentUser;
     super.initState();
   }
 
-  showCompleteAppoinmentDialog(context, String documentId) {
+  showCompleteAppoinmentDialog(context, String documentId,
+      {required String doctorId,
+      required String patientId,
+      required Timestamp date}) {
     showDialog(
       context: context,
       builder: (context) {
@@ -38,7 +44,12 @@ class _PendingDoctorScheduleListState extends State<PendingDoctorScheduleList> {
             children: [
               TextButton(
                 onPressed: () {
-                  completeAppoinment(documentId);
+                  completeAppoinment(
+                    doctorId: doctorId,
+                    date: date,
+                    docId: documentId,
+                    patientId: patientId,
+                  );
                   pop(context);
                 },
                 child: Text(
@@ -75,7 +86,7 @@ class _PendingDoctorScheduleListState extends State<PendingDoctorScheduleList> {
             children: [
               TextButton(
                 onPressed: () {
-                  deleteAppoinment(documentId);
+                  AppoinmnetServices.deleteAppoinment(documentId);
                   pop(context);
                 },
                 child: Text(
@@ -99,52 +110,35 @@ class _PendingDoctorScheduleListState extends State<PendingDoctorScheduleList> {
     );
   }
 
-  completeAppoinment(String docId) {
+  completeAppoinment(
+      {required String docId,
+      required String doctorId,
+      required String patientId,
+      required Timestamp date}) async {
+//get id of the appoinment in the all collection to update the iscomplete value
+    await AppoinmnetServices.getAppoinmentID(
+      date: date,
+      doctorId: doctorId,
+      patientId: patientId,
+    ).then((value) {
+      appId = value;
+    });
     FirebaseFirestore.instance
         .collection("appoinment")
         .doc("appoinments")
         .collection("all")
-        .doc(docId)
-        .update({
-      "iscomplete": true,
-    },);
+        .doc(appId)
+        .update(
+      {
+        "iscomplete": true,
+      },
+    );
     FirebaseFirestore.instance
         .collection("appoinment")
         .doc("appoinments")
         .collection("pending")
         .doc(docId)
         .delete();
-  }
-
-  deleteAppoinment(String docId) {
-    FirebaseFirestore.instance
-        .collection("appoinment")
-        .doc("appoinments")
-        .collection("pending")
-        .doc(docId)
-        .delete();
-  }
-
-  isToday(Timestamp date) {
-    var diff = DateTime.now()
-        .difference(DateTime.parse(date.toDate().toString()))
-        .inDays;
-    if (diff > 0) {
-      return true;
-    }
-    return false;
-  }
-
-  dateFormatter(Timestamp date) {
-    String formattedDate = DateFormat("dd-MM-yyyy")
-        .format(DateTime.parse(date.toDate().toString()));
-    return formattedDate;
-  }
-
-  timeFormatter(Timestamp date) {
-    String formattedTime =
-        DateFormat("hh:mm").format(DateTime.parse(date.toDate().toString()));
-    return formattedTime;
   }
 
   @override
@@ -163,7 +157,6 @@ class _PendingDoctorScheduleListState extends State<PendingDoctorScheduleList> {
             child: CircularProgressIndicator(),
           );
         }
-
         return snapshot.data!.docs.isEmpty
             ? const EmptyPendingAppoinments()
             : Padding(
@@ -180,8 +173,6 @@ class _PendingDoctorScheduleListState extends State<PendingDoctorScheduleList> {
                         itemCount: snapshot.data!.size,
                         itemBuilder: (context, index) {
                           var document = snapshot.data!.docs[index];
-                          // if (isToday(document["date"])) {
-                          // return
                           return Container(
                             margin: const EdgeInsets.only(bottom: 15),
                             padding: const EdgeInsets.symmetric(
@@ -225,12 +216,13 @@ class _PendingDoctorScheduleListState extends State<PendingDoctorScheduleList> {
                                       ),
                                       const Gap(10),
                                       Text(
-                                        dateFormatter(document["date"]),
+                                        TimeServices.dateFormatter(
+                                            document["date"]),
                                         style: getBodyStyle(),
                                       ),
                                       const Gap(15),
                                       Text(
-                                        isToday(document["date"])
+                                        TimeServices.isToday(document["date"])
                                             ? "اليوم"
                                             : "",
                                         style: getBodyStyle(
@@ -246,7 +238,8 @@ class _PendingDoctorScheduleListState extends State<PendingDoctorScheduleList> {
                                       ),
                                       const Gap(10),
                                       Text(
-                                        timeFormatter(document["date"]),
+                                        TimeServices.timeFormatter(
+                                            document["date"]),
                                         style: getBodyStyle(),
                                       ),
                                     ],
@@ -266,7 +259,12 @@ class _PendingDoctorScheduleListState extends State<PendingDoctorScheduleList> {
                                         width: double.infinity,
                                         onPressed: () {
                                           showCompleteAppoinmentDialog(
-                                              context, document.id);
+                                            context,
+                                            document.id,
+                                            date: document["date"],
+                                            doctorId: document["doctorId"],
+                                            patientId: document["patientId"],
+                                          );
                                         },
                                         text: "اكتمال الحجز",
                                       ),
@@ -286,7 +284,7 @@ class _PendingDoctorScheduleListState extends State<PendingDoctorScheduleList> {
                               ],
                             ),
                           );
-                                      },
+                        },
                       )
                     ],
                   ),

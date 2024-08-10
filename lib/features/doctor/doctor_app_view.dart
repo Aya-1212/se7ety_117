@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:se7ety_117/core/utils/app_colors.dart';
 import 'package:se7ety_117/core/utils/text_style.dart';
+import 'package:se7ety_117/features/doctor/History/presentation/views/histoty_view.dart';
 import 'package:se7ety_117/features/doctor/appoinment/views/doctor_schedules_view.dart';
 import 'package:se7ety_117/features/doctor/profile/views/doctor_personal_profile.dart';
 import 'package:se7ety_117/features/doctor/settings/views/doctor_profile_settings.dart';
@@ -16,6 +17,7 @@ class DoctorAppView extends StatefulWidget {
 class _DoctorAppViewState extends State<DoctorAppView> {
   List<Widget> naviViews = [
     const DoctorSchedulesView(),
+    const HistoryView(),
     const DoctorpersonalProfile(),
     const DoctorProfileSettings(),
   ];
@@ -62,8 +64,12 @@ class _DoctorAppViewState extends State<DoctorAppView> {
             tabBackgroundColor: AppColors.primary,
             tabs: const [
               GButton(
+                icon: Icons.work_history_rounded,                
+                text: 'العمل',
+              ),
+              GButton(
                 icon: Icons.calendar_month_outlined,
-                text: 'المواعيد',
+                text: "المواعيد",
               ),
               GButton(
                 icon: Icons.person,

@@ -9,7 +9,7 @@ import 'package:se7ety_117/core/constants/assets_images.dart';
 import 'package:se7ety_117/core/functions/routing.dart';
 import 'package:se7ety_117/core/utils/app_colors.dart';
 import 'package:se7ety_117/core/utils/text_style.dart';
-import 'package:se7ety_117/core/widgets/all_appoinments.dart';
+import 'package:se7ety_117/core/widgets/appoinments_list.dart';
 import 'package:se7ety_117/core/widgets/custom_elevated.dart';
 import 'package:se7ety_117/core/widgets/tile_widget.dart';
 import 'package:se7ety_117/features/doctor/settings/views/update_doctor_information.dart';
@@ -137,7 +137,8 @@ class _DoctorpersonalProfileState extends State<DoctorpersonalProfile> {
                           person["specialization"] == ""
                               ? CustomElevatedButton(
                                   onPressed: () {
-                  push(context, const UpdateDoctorInformations());
+                                    push(context,
+                                        const UpdateDoctorInformations());
                                   },
                                   text: "تعديل",
                                 )
@@ -212,10 +213,11 @@ class _DoctorpersonalProfileState extends State<DoctorpersonalProfile> {
                     style: getBodyStyle(),
                   ),
                   const Gap(10),
-                  AllAppoinments(
+                  AppoinmentsList(
                     isDoctor: true,
                     useremail: person["email"],
                     whereKey: "doctorId",
+                    collectionName: "all",
                   ),
                 ],
               ),

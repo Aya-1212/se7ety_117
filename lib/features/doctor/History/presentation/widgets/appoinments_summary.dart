@@ -1,21 +1,15 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:intl/intl.dart';
+import 'package:se7ety_117/core/services/time_services.dart';
 import 'package:se7ety_117/core/utils/app_colors.dart';
 import 'package:se7ety_117/core/utils/text_style.dart';
 
-class AllAppoinments extends StatelessWidget {
-  const AllAppoinments(
-      {super.key,
-      required this.useremail,
-      required this.whereKey,
-      required this.isDoctor,
-      });
-  final String whereKey;
-  final String useremail;
-  final bool isDoctor;
+class AppoinmentSummary extends StatelessWidget {
+  const AppoinmentSummary({super.key, required this.isComplete, required this.doctorEmail});
+ final bool isComplete;
+ final String doctorEmail;
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -23,8 +17,9 @@ class AllAppoinments extends StatelessWidget {
           .collection("appoinment")
           .doc("appoinments")
           .collection("all")
-          .where(whereKey, isEqualTo: useremail) //key//email
-          .orderBy("date", descending: false)
+          .where("doctorId", isEqualTo: doctorEmail)
+          .where("iscomplete", isEqualTo: isComplete)
+          .orderBy("date", descending: true)
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -74,11 +69,25 @@ class AllAppoinments extends StatelessWidget {
                           TextSpan(
                             children: [
                               TextSpan(
-                                text: isDoctor == false ? "د/  " : "اسم المريض: ",
+                                text: "اسم المريض: ",
                                 style: getBodyStyle(color: AppColors.primary),
                               ),
                               TextSpan(
-                                text: isDoctor == false ? document["doctor"] : document["name"]  ,
+                                text: document["name"],
+                                style: getBodyStyle(color: AppColors.primary),
+                              ),
+                            ],
+                          ), //
+                        ),
+                         Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: "رقم هاتف المريض: ",
+                                style: getBodyStyle(color: AppColors.primary),
+                              ),
+                              TextSpan(
+                                text: document["phone"],
                                 style: getBodyStyle(color: AppColors.primary),
                               ),
                             ],
@@ -92,7 +101,8 @@ class AllAppoinments extends StatelessWidget {
                             ),
                             const Gap(10),
                             Text(
-                              dateFormatter(document["date"]),
+                            
+                              TimeServices.dateFormatter(document["date"]),
                               style: getBodyStyle(),
                             ),
                             const Gap(15),
@@ -106,11 +116,12 @@ class AllAppoinments extends StatelessWidget {
                             ),
                             const Gap(10),
                             Text(
-                              timeFormatter(document["date"]),
+                                TimeServices.timeFormatter(document["date"]),
                               style: getBodyStyle(),
                             ),
                           ],
                         ),
+                         
                       ],
                     ),
                   );
@@ -118,17 +129,5 @@ class AllAppoinments extends StatelessWidget {
               );
       },
     );
-  }
-
-  dateFormatter(Timestamp date) {
-    String formattedDate = DateFormat("dd-MM-yyyy")
-        .format(DateTime.parse(date.toDate().toString()));
-    return formattedDate;
-  }
-
-  timeFormatter(Timestamp date) {
-    String formattedTime =
-        DateFormat("hh:mm").format(DateTime.parse(date.toDate().toString()));
-    return formattedTime;
   }
 }

@@ -8,12 +8,22 @@ class EmptyPendingAppoinments extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-      SvgPicture.asset("assets/no_scheduled.svg",height: 200,width: 200,),
-      const Gap(20),
-      Text("لا يوجد حجوزات حاليا",style: getTitleStyle(),),
-    ],),);
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset(
+            "assets/no_scheduled.svg",
+            height: 200,
+            width: 200,
+          ),
+          const Gap(20),
+          Text(
+            "لا يوجد حجوزات حاليا",
+            style: getTitleStyle(),
+          ),
+        ],
+      ),
+    );
   }
 }

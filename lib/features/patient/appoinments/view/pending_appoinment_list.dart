@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:intl/intl.dart';
 import 'package:se7ety_117/core/functions/routing.dart';
+import 'package:se7ety_117/core/services/appoinment_services.dart';
+import 'package:se7ety_117/core/services/time_services.dart';
 import 'package:se7ety_117/core/utils/app_colors.dart';
 import 'package:se7ety_117/core/utils/text_style.dart';
 import 'package:se7ety_117/core/widgets/custom_elevated.dart';
@@ -37,7 +38,7 @@ class _PendingAppoinmentsListState extends State<PendingAppoinmentsList> {
             children: [
               TextButton(
                 onPressed: () {
-                  deleteAppoinment(documentId);
+                  AppoinmnetServices.deleteAppoinment(documentId);
                   pop(context);
                 },
                 child: Text(
@@ -61,46 +62,6 @@ class _PendingAppoinmentsListState extends State<PendingAppoinmentsList> {
     );
   }
 
-  deleteAppoinment(String docId) {
-    FirebaseFirestore.instance
-        .collection("appoinment")
-        .doc("appoinments")
-        .collection("pending")
-        .doc(docId)
-        .delete();
-  }
-
-  checkDiff(Timestamp date) {
-    var diff = DateTime.now()
-        .difference(DateTime.parse(date.toDate().toString()))
-        .inHours;
-    if (diff > 2) {
-      return true;
-    }
-    return false;
-  }
-
-  isToday(Timestamp date) {
-    var diff = DateTime.now()
-        .difference(DateTime.parse(date.toDate().toString()))
-        .inDays;
-    if (diff > 0) {
-      return true;
-    }
-    return false;
-  }
-
-  dateFormatter(Timestamp date) {
-    String formattedDate = DateFormat("dd-MM-yyyy")
-        .format(DateTime.parse(date.toDate().toString()));
-    return formattedDate;
-  }
-
-  timeFormatter(Timestamp date) {
-    String formattedTime =
-        DateFormat("hh:mm").format(DateTime.parse(date.toDate().toString()));
-    return formattedTime;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -135,8 +96,8 @@ class _PendingAppoinmentsListState extends State<PendingAppoinmentsList> {
                         itemCount: snapshot.data!.size,
                         itemBuilder: (context, index) {
                           var document = snapshot.data!.docs[index];
-                          if (checkDiff(document["date"])) {
-                            deleteAppoinment(document.id);
+                          if (TimeServices.checkDiff(document["date"])) {
+                            AppoinmnetServices.deleteAppoinment(document.id);
                           }
                           return Container(
                             margin: const EdgeInsets.only(bottom: 15),
@@ -170,12 +131,12 @@ class _PendingAppoinmentsListState extends State<PendingAppoinmentsList> {
                                       ),
                                       const Gap(10),
                                       Text(
-                                        dateFormatter(document["date"]),
+                                        TimeServices.dateFormatter(document["date"]),
                                         style: getBodyStyle(),
                                       ),
                                       const Gap(15),
                                       Text(
-                                        isToday(document["date"])
+                                        TimeServices.isToday(document["date"])
                                             ? "اليوم"
                                             : "",
                                         style: getBodyStyle(
@@ -191,7 +152,7 @@ class _PendingAppoinmentsListState extends State<PendingAppoinmentsList> {
                                       ),
                                       const Gap(10),
                                       Text(
-                                        timeFormatter(document["date"]),
+                                        TimeServices.timeFormatter(document["date"]),
                                         style: getBodyStyle(),
                                       ),
                                     ],
