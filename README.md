@@ -1,7 +1,7 @@
 # Flutter Project
 - Arabic language
 ## Se7ety صحتي  
-This Flutter-based mobile application aims to facilitate efficient doctor appointments for both patients and doctors. Leveraging the Firebase platform for authentication, storage, and real-time database functionalities, the app offers a streamlined experience for  managing and tracking appointments.
+This Flutter-based mobile application aims to facilitate efficient doctor appointments . Leveraging the Firebase platform for authentication, storage, and real-time database functionalities, the app offers a streamlined experience for  managing and tracking appointments.
 
 ### Core Functionalities
  #### Patient Interface
